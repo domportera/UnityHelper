@@ -17,6 +17,18 @@ namespace DomsUnityHelper
 
             return sum / numsToAverage.Length;
         }
+
+        public static double Average(params double[] numsToAverage)
+        {
+            double sum = 0f;
+            foreach(double f in numsToAverage)
+            {
+                sum += f;
+            }
+
+            return sum / numsToAverage.Length;
+        }
+
         public static float Average(params int[] numsToAverage)
         {
             float sum = 0f;

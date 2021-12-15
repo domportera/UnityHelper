@@ -6,14 +6,6 @@ namespace DomsUnityHelper
 {
     public abstract class MonoBehaviourExtended : MonoBehaviour
     {
-        /// <summary>
-        /// Performs a GetComponent on a disabled object. This will trigger the object's OnEnable and OnDisable events.
-        /// </summary>
-        public T GetComponentHandleDisabled<T>()
-        {
-            return gameObject.GetComponentHandleDisabled<T>();
-        }
-
         #region Logging
         protected enum DebugMode { Off, Debug, Verbose };
         [SerializeField] DebugMode debugMode = DebugMode.Off;

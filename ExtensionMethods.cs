@@ -9,31 +9,6 @@ namespace DomsUnityHelper
 {
     public static class ExtensionMethods
     {
-        #region Finding Things
-        /// <summary>
-        /// Can get component on a disabled game object. This will enable then re-disable a disabled game object - so beware any OnEnabled or OnDisabled functions will be called on the target.
-        /// Type provided must be a monobehaviour of course
-        /// </summary>
-        /// <returns>Component of type requested, or default value (null)</returns>
-        public static T GetComponentHandleDisabled<T>(this GameObject _obj)
-        {
-            bool active = _obj.activeSelf;
-            if(!active)
-            {
-                _obj.SetActive(true);
-            }
-
-            T component = _obj.GetComponent<T>();
-
-            if(!active)
-            {
-                _obj.SetActive(false);
-            }
-
-            return component;
-        }
-        #endregion Finding Things
-
         #region Vector Operations
 
         #region Divide Self
@@ -164,6 +139,21 @@ namespace DomsUnityHelper
         }
 
         public static void MapSelf(ref this int x, int in_min, int in_max, int out_min, int out_max)
+        {
+            x = x.Map(in_min, in_max, out_min, out_max);
+        }
+
+        public static void MapSelf(ref this Vector2 x, Vector2 in_min, Vector2 in_max, Vector2 out_min, Vector2 out_max)
+        {
+            x = x.Map(in_min, in_max, out_min, out_max);
+        }
+
+        public static void MapSelf(ref this Vector3 x, Vector3 in_min, Vector3 in_max, Vector3 out_min, Vector3 out_max)
+        {
+            x = x.Map(in_min, in_max, out_min, out_max);
+        }
+
+        public static void MapSelf(ref this Vector4 x, Vector4 in_min, Vector4 in_max, Vector4 out_min, Vector4 out_max)
         {
             x = x.Map(in_min, in_max, out_min, out_max);
         }

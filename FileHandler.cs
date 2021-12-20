@@ -31,21 +31,7 @@ namespace DomsUnityHelper
                 Directory.CreateDirectory(_directory);
             }
 
-            if(!_fileExtension.StartsWith('.'))
-            {
-                if(_log)
-                {
-                    Debug.LogWarning($"Adding '.' to start of file extension {_fileExtension}");
-                }
-
-                _fileExtension = '.' + _fileExtension;
-            }
-
-            if(_fileExtension.Contains(' '))
-            {
-                Debug.LogError($"File extension should not contain whitespace. Removing before saving.");
-                _fileExtension.Replace(" ", "");
-            }
+            _fileExtension = PrepareFileExtension(_fileExtension, _log);
 
             string fullFileName = _fileName.Trim() + _fileExtension;
             string path = Path.Combine(_directory, fullFileName);
@@ -64,6 +50,27 @@ namespace DomsUnityHelper
                 Debug.LogError($"Error saving file {_fileName} to {path}:\n{e}");
                 return false;
             }
+        }
+
+        private static string PrepareFileExtension(string _fileExtension, bool _log)
+        {
+            if(!_fileExtension.StartsWith('.'))
+            {
+                if(_log)
+                {
+                    Debug.LogWarning($"Adding '.' to start of file extension {_fileExtension}");
+                }
+
+                _fileExtension = '.' + _fileExtension;
+            }
+
+            if(_fileExtension.Contains(' '))
+            {
+                Debug.LogError($"File extension should not contain whitespace. Removing.");
+                _fileExtension.Replace(" ", "");
+            }
+
+            return _fileExtension;
         }
         #endregion Saving
 
@@ -149,16 +156,29 @@ namespace DomsUnityHelper
         /// <summary>
         /// Gets file info of all files in provided directory - if no such directory exists, returns null
         /// </summary>
-        public static FileInfo[] GetFilesInDirectory(string _directory)
+        public static FileInfo[] GetFilesInDirectory(string _directory, string _extension = "", bool _log = false)
         {
             if(Directory.Exists(_directory))
             {
                 DirectoryInfo directoryInfo = new DirectoryInfo(_directory);
-                return directoryInfo.GetFiles();
+
+                if(string.IsNullOrWhiteSpace(_extension))
+                {
+                    return directoryInfo.GetFiles();
+                }
+                else
+                {
+                    string extension = PrepareFileExtension(_extension, _log);
+                    return directoryInfo.GetFiles('*' + extension);
+                }
             }
             else
             {
-                Debug.LogWarning($"Directory {_directory} was not found");
+                if(_log)
+                {
+                    Debug.LogWarning($"Directory {_directory} was not found");
+                }
+
                 return null;
             }
         }

@@ -109,13 +109,28 @@ namespace DomsUnityHelper
             return ObjectFromJson<T>(json);
         }
 
+        /// <summary>
+        /// Loads file in at provided directory with provided file info and attempts to convert it to provided object type
+        /// </summary>
+        public static T LoadJsonObject<T>(FileInfo _file)
+        {
+            if(_file == null)
+            {
+                Debug.LogWarning($"Attempting to create a json object from null file info");
+                return default(T);
+            }
+
+            string json = LoadTextFile(_file.DirectoryName, _file.Name);
+            return ObjectFromJson<T>(json);
+        }
+
         static T LoadJsonObject<T>(string _directory, string _fullFileName)
         {
             string json = LoadTextFile(_directory, _fullFileName);
             return ObjectFromJson<T>(json);
         }
 
-        static T ObjectFromJson<T>(string _json)
+        public static T ObjectFromJson<T>(string _json)
         {
             if(string.IsNullOrWhiteSpace(_json))
             {
@@ -132,6 +147,20 @@ namespace DomsUnityHelper
         {
             string fullFileName = _fileName + _fileExtension;
             return LoadTextFile(_directory, fullFileName);
+        }
+        
+        /// <summary>
+        /// Loads provided text file from file info
+        /// </summary>
+        public static string LoadTextFile(FileInfo _info)
+        {
+            if(_info == null)
+            {
+                Debug.LogWarning($"Attempting to load text file on null FileInfo");
+                return string.Empty;
+            }
+            
+            return LoadTextFile(_info.DirectoryName, _info.Name);
         }
 
         static string LoadTextFile(string _directory, string _fullFileName)
@@ -186,13 +215,11 @@ namespace DomsUnityHelper
         /// <summary>
         /// Deletes file at provided location
         /// </summary>
-        public static bool DeleteFile(string _directory, string _fileNameSansExtension, string _fileExtension)
+        public static bool DeleteFile(string _filePath)
         {
-            string filePath = Path.Combine(_directory, _fileNameSansExtension + _fileExtension);
-
             try
             {
-                File.Delete(filePath);
+                File.Delete(_filePath);
                 return true;
             }
             catch(Exception e)
@@ -200,6 +227,25 @@ namespace DomsUnityHelper
                 Debug.LogError($"File deletion error: {e}");
                 return false;
             }
+        }
+
+        /// <summary>
+        /// Deletes file at provided location
+        /// </summary>
+        public static bool DeleteFile(string _directory, string _fileNameSansExtension, string _fileExtension, bool _log = false)
+        {
+            string extension = PrepareFileExtension(_fileExtension, _log);
+            string filePath = Path.Combine(_directory, _fileNameSansExtension + extension);
+
+            return DeleteFile(filePath);
+        }
+
+        /// <summary>
+        /// Deletes file at provided location
+        /// </summary>
+        public static bool DeleteFile(FileInfo _file)
+        {
+            return DeleteFile(_file.FullName);
         }
 
         #endregion Loading

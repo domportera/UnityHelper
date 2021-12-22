@@ -9,14 +9,39 @@ namespace DomsUnityHelper
     public static class FileHandler
     {
         #region Saving
+
+        /// <summary>
+        /// Saves json file of class object to file. Will overwrite an existing file. Uses Unity's JsonUtility.
+        /// </summary>
+        /// <returns>Returns true if successful</returns>
+        public static bool SaveJsonObject<T>(T _save, FileInfo _fileInfo, bool _prettyPrint = true, bool _log = false)
+        {
+            string json = JsonUtility.ToJson(_save, _prettyPrint);
+            return SaveTextFile(json, _fileInfo, _log);
+        }
+
         /// <summary>
         /// Saves json file of class object to specified directory and file. Will overwrite an existing file. Uses Unity's JsonUtility.
         /// </summary>
         /// <returns>Returns true if successful</returns>
-        public static bool SaveJsonObject<T>(T _save, string _directory, string _fileName, string _fileExtension = ".json", bool _prettyPrint = true)
+        public static bool SaveJsonObject<T>(T _save, string _directory, string _fileName, string _fileExtension = ".json", bool _prettyPrint = true, bool _log = false)
         {
             string json = JsonUtility.ToJson(_save, _prettyPrint);
-            return SaveTextFile(json, _directory, _fileName, _fileExtension);
+            return SaveTextFile(json, _directory, _fileName, _fileExtension, _log);
+        }
+
+        /// <summary>
+        /// Saves text file to specified file. Will overwrite an existing file
+        /// </summary>
+        /// <param name="_log">Log to console on successful write</param>
+        /// <returns>Returns true if successful</returns>
+        public static bool SaveTextFile(string _text, FileInfo _file, bool _log = false)
+        {
+            string directory = _file.DirectoryName;
+            string fileName = Path.GetFileNameWithoutExtension(_file.Name);
+            string extension = _file.Extension;
+
+            return SaveTextFile(_text, directory, fileName, extension, _log);
         }
 
         /// <summary>
@@ -130,6 +155,9 @@ namespace DomsUnityHelper
             return ObjectFromJson<T>(json);
         }
 
+        /// <summary>
+        /// Converts json into an object of provided type
+        /// </summary>
         public static T ObjectFromJson<T>(string _json)
         {
             if(string.IsNullOrWhiteSpace(_json))

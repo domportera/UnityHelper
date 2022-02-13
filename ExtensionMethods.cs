@@ -277,5 +277,12 @@ namespace DomsUnityHelper
         }
 
         #endregion Enums
+
+        #region Collections
+        public static bool IsNullOrEmpty(this ICollection _collection)
+        {
+            return _collection == null || _collection.Count == 0;
+        }
+        #endregion Collections
     }
 }

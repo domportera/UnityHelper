@@ -79,7 +79,7 @@ namespace DomsUnityHelper
 
         private static string PrepareFileExtension(string _fileExtension, bool _log)
         {
-            if(!_fileExtension.StartsWith('.'))
+            if(!_fileExtension.StartsWith("."))
             {
                 if(_log)
                 {
